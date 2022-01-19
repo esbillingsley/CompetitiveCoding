@@ -1,0 +1,80 @@
+import java.io.*;
+import java.util.*;
+import java.util.StringTokenizer;
+
+public class BalancedRem implements Runnable {
+    public static void main(String [] args) {
+        new Thread(null, new BalancedRem(), "whatever", 1<<26).start();
+    }
+
+    public void run() {
+        FastScanner scanner = new FastScanner(System.in);
+        StringBuilder answers = new StringBuilder();
+        int tests = scanner.nextInt();
+        for (int t = 0; t < tests; t++) {
+            int n = scanner.nextInt();
+            int[] remainders = new int[3];
+            for (int i = 0; i < n; i++) {
+                remainders[scanner.nextInt() % 3]++;
+            }
+            int target = n / 3;
+            int count = 0;
+            int i = 0;
+            while (!(remainders[0] == remainders[1] && remainders[1] == remainders[2])) {
+                if (i == 3) {
+                    i = 0;
+                }
+                if (remainders[i] > target) {
+                    if (i == 2) {
+                        int diff = remainders[i] - target;
+                        remainders[i] -= diff;
+                        remainders[0] += diff;
+                        count += diff;
+                    }
+                    else {
+                        int diff = remainders[i] - target;
+                        remainders[i] -= diff;
+                        remainders[i+1] += diff;
+                        count += diff;
+                    }
+                }
+                i++;
+            }
+            answers.append(count + "\n");
+        }
+        System.out.println(answers);
+    }
+
+    class FastScanner {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastScanner(Reader in) {
+            br = new BufferedReader(in);
+        }
+
+        public FastScanner(InputStream in) {
+            this(new InputStreamReader(in));
+        }
+
+        public String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        public int nextInt() {
+            return Integer.parseInt(next());
+        }
+        public long nextLong() {
+            return Long.parseLong(next());
+        }
+        public double nextDouble() { return Double.parseDouble(next());}
+
+    }
+}
